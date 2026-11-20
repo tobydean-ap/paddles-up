@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paddles Up</title>
+<meta name="theme-color" content="#1B2466">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%AA%A9%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF4E8; --surface:#FFFFFF; --surface-2:#F3E8D2; --ink:#1A1F4D; --muted:#585E8C;
+  --line:#E2D5BB; --gold:#9A6F12; --gold-hi:#F2C14E; --blush:#C24868;
+  --stage:#1B2466; --stage-ink:#FFF6E6; --header:#FBF4E8;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1437; --surface:#182051; --surface-2:#212A63; --ink:#F7EEDD; --muted:#AEB3DE;
+    --line:#2F3874; --gold:#F2C14E; --gold-hi:#F7D57E; --blush:#F2A0B5;
+    --stage:#0A0E2C; --header:#0F1437; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1437; --surface:#182051; --surface-2:#212A63; --ink:#F7EEDD; --muted:#AEB3DE;
+  --line:#2F3874; --gold:#F2C14E; --gold-hi:#F7D57E; --blush:#F2A0B5;
+  --stage:#0A0E2C; --header:#0F1437; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,"Segoe UI",system-ui,-apple-system,sans-serif;min-height:100%}
+body.locked{overflow:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--header)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--gold-hi);outline-offset:2px}
+.serif{font-family:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--header);border-bottom:1px solid var(--line)}
+.hwrap{max-width:560px;margin:0 auto;padding:12px 16px 10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:800;font-size:1.7rem;line-height:1;margin:0;letter-spacing:-.01em;flex:1}
+.brand span{color:var(--gold)}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;width:40px;height:40px;display:grid;place-items:center;font-size:1.1rem}
+.meta{width:100%;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.judge{background:none;border:0;padding:4px 0;color:var(--muted);font-size:.95rem;text-align:left}
+.judge b{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.week{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.week button{width:32px;height:32px;border-radius:50%;border:0;background:var(--surface-2);font-size:1.1rem;line-height:1}
+.week span{min-width:68px;text-align:center;font-weight:600;font-size:.95rem}
+
+main{max-width:560px;margin:0 auto;padding:18px 16px calc(110px + env(safe-area-inset-bottom,0px))}
+h2{font-family:"Bodoni Moda",Didot,Georgia,serif;font-weight:700;font-size:1.5rem;line-height:1.2;margin:0}
+.sectionhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.link{background:none;border:0;color:var(--gold);font-weight:600;padding:6px 2px}
+.empty{color:var(--muted);margin:8px 0 18px;max-width:40ch}
+.primary{border:0;border-radius:999px;background:var(--stage);color:var(--stage-ink);font-weight:600;padding:12px 20px;white-space:nowrap}
+.primary.gold{background:var(--gold-hi);color:#1A1F4D}
+.ghost{border:1px solid rgba(255,246,230,.35);background:transparent;color:var(--stage-ink);border-radius:999px;padding:12px 20px;font-weight:600}
+input[type=text],input:not([type]){width:100%;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px}
+
+.couples{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:10px}
+.couple{display:flex;gap:8px;align-items:stretch}
+.couple-btn{flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;min-height:64px}
+.couple-btn:disabled{opacity:.6;cursor:default}
+.cname{font-family:"Bodoni Moda",Didot,Georgia,serif;font-size:1.25rem;font-weight:600;line-height:1.2}
+.lastscore{flex:none;width:42px;height:42px;border-radius:50%;background:var(--stage);color:var(--gold-hi);display:grid;place-items:center;font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:800;font-size:1.25rem}
+.todo{flex:none;color:var(--muted);font-size:.85rem}
+.remove{border:1px solid var(--line);background:var(--surface-2);color:var(--blush);border-radius:14px;padding:0 14px;font-weight:600}
+.add{display:flex;gap:8px}
+.welcome{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px 18px}
+.welcome p{color:var(--muted);margin:6px 0 16px}
+.welcome form{display:flex;gap:8px}
+
+/* Bottom sheet */
+#sheet{position:fixed;inset:0;z-index:20}
+#sheet[hidden]{display:none}
+.backdrop{position:absolute;inset:0;background:rgba(10,14,44,.55)}
+.panel{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--bg);border-radius:24px 24px 0 0;padding:10px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:92%;overflow:auto}
+.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 12px}
+.panel h3{font-family:"Bodoni Moda",Didot,Georgia,serif;font-size:1.6rem;margin:0}
+.hint{color:var(--muted);margin:2px 0 14px}
+.dances{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.9rem}
+.chip.on{background:var(--stage);color:var(--stage-ink);border-color:var(--stage)}
+.paddles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px}
+.paddle{aspect-ratio:1;border-radius:50%;border:3px solid var(--gold-hi);background:var(--stage);color:var(--gold-hi);font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:800;font-size:clamp(1.4rem,7vw,2.1rem);display:grid;place-items:center;padding:0;transition:transform .12s}
+.paddle:active{transform:scale(.92)}
+.close{display:block;margin:4px auto 0}
+
+/* The big reveal */
+#reveal{position:fixed;inset:0;z-index:30;color:var(--stage-ink);background:radial-gradient(ellipse 70% 55% at 50% -5%,rgba(255,236,190,.38),transparent 70%),var(--stage);display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));overflow:hidden}
+#reveal[hidden]{display:none}
+#glitter{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.rv-top{position:relative}
+.rv-judge{margin:0;opacity:.75}
+.rv-couple{font-family:"Bodoni Moda",Didot,Georgia,serif;font-size:clamp(1.6rem,7vw,2.4rem);color:var(--stage-ink);margin:2px 0 0}
+.rv-dance{margin:2px 0 0;opacity:.75}
+.rv-stage{position:relative;flex:1;display:grid;place-items:center;width:100%}
+.rv-wait{font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-size:1.6rem;opacity:.85;animation:pulse 1s ease-in-out infinite}
+.disc{position:relative;width:min(62vw,32vh);aspect-ratio:1;border-radius:50%;background:#F2C14E;color:#1B2466;display:grid;place-items:center;box-shadow:0 0 0 8px rgba(242,193,78,.25),0 30px 80px rgba(0,0,0,.45);animation:slam .55s cubic-bezier(.2,1.6,.4,1) both}
+.disc::after{content:"";position:absolute;top:98%;left:50%;width:9%;height:28%;transform:translateX(-50%);background:#C9982E;border-radius:0 0 8px 8px;z-index:-1}
+.disc span{font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:900;font-size:min(38vw,20vh);line-height:1;transform:translateY(-3%)}
+.disc.two span{font-size:min(30vw,16vh)}
+.rv-line{position:relative;font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:700;font-size:clamp(1.5rem,7vw,2.4rem);margin:22px 0 10px;min-height:1.3em;color:#F2C14E}
+.rv-actions{position:relative;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@keyframes slam{0%{transform:scale(2.6) rotate(-14deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes pulse{50%{opacity:.35}}
+
+/* Leaderboard */
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:16px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--stage);color:var(--stage-ink)}
+.board{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:10px}
+.entry{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center}
+.entry.first{border-color:var(--gold-hi);box-shadow:inset 0 0 0 1px var(--gold-hi)}
+.rank{font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:800;font-size:1.6rem;color:var(--gold);min-width:1.4em;text-align:center}
+.ename{font-family:"Bodoni Moda",Didot,Georgia,serif;font-weight:600;font-size:1.2rem;line-height:1.2}
+.etotal{text-align:right;font-weight:700;font-size:1.4rem;line-height:1}
+.etotal small{display:block;font-weight:500;font-size:.75rem;color:var(--muted);margin-top:3px}
+.edances{grid-column:2 / 4;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sc{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 10px;font-size:.85rem}
+.sc b{font-weight:700}
+.sc.armed{background:var(--blush);color:#fff;border-color:var(--blush)}
+.notes{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+.sharebox{width:100%;min-height:150px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--surface);margin-top:10px;font:inherit}
+
+/* Sounds */
+.sounds{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.snd{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.snd h3{margin:0;font-size:1rem}
+.snd .ln{font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-size:1.3rem;margin:2px 0 10px}
+.snd .row{display:flex;flex-wrap:wrap;gap:8px}
+.small{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:8px 14px;font-weight:600;font-size:.9rem}
+.small.rec{background:var(--blush);color:#fff;border-color:var(--blush)}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;color:var(--gold);margin-left:6px}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nwrap{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+nav button{border:0;background:none;padding:14px 4px 12px;font-weight:600;color:var(--muted);border-top:3px solid transparent}
+nav button[aria-current="page"]{color:var(--ink);border-top-color:var(--gold-hi)}
+
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--ink);color:var(--bg);border-radius:999px;padding:10px 18px;font-size:.9rem;max-width:90vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  .disc{animation:none}
+  .rv-wait{animation:none}
+  .paddle{transition:none}
+}
+.status{margin:0 0 16px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--muted);font-size:.9rem}
+.status.live{display:flex;align-items:center;gap:8px;color:var(--ink)}
+.status .dot{flex:none;width:9px;height:9px;border-radius:50%;background:#2FA36B;box-shadow:0 0 0 3px rgba(47,163,107,.25)}
+.status.warn{border-color:var(--gold-hi)}
+.h3{font-size:1.15rem}
+.phonepanel{margin-bottom:22px}
+.phonepanel .sectionhead{margin-bottom:8px}
+.jchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.jchip{display:inline-flex;align-items:center;gap:6px;background:var(--stage);color:var(--stage-ink);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.95rem}
+.jchip .x{border:0;background:rgba(255,246,230,.18);color:var(--stage-ink);border-radius:999px;padding:2px 9px;font-size:.85rem;font-weight:600}
+.jchip .x.armed{background:var(--blush);color:#fff}
+.add.slim input{padding:10px 12px}
+.add.slim .primary{padding:10px 16px}
+.couple-btn{flex-direction:column;align-items:stretch;justify-content:flex-start}
+.ctop{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.csub{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+.ctotal{flex:none;font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:800;font-size:1.7rem;color:var(--gold);line-height:1}
+.minis{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.mini{width:30px;height:30px;border-radius:50%;background:var(--stage);color:var(--gold-hi);display:grid;place-items:center;font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:800;font-size:1rem;line-height:1}
+.mini.unscored{background:transparent;border:1.5px dashed var(--muted);color:var(--muted);font-family:Figtree,system-ui,sans-serif;font-style:normal;font-weight:600;font-size:.7rem}
+.who{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.label{font-weight:600;font-size:.9rem;margin:0 0 8px}
+.rescore{color:var(--blush);font-size:.88rem;margin:-6px 0 12px}
+.rv-panel{position:relative;width:100%;max-width:520px;margin:0 auto 12px}
+.rvp-row{display:flex;align-items:flex-start;flex-wrap:wrap;justify-content:center;gap:10px 14px}
+.rvp{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px}
+.rvp .mini{flex:none;vertical-align:top;width:46px;height:46px;font-size:1.4rem;background:#F2C14E;color:#1B2466}
+.rvp .mini.unscored{background:transparent;border:1.5px dashed rgba(255,246,230,.5);color:rgba(255,246,230,.8);font-size:1rem}
+.rvp-n{font-size:.78rem;opacity:.85;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rvp-total{margin:10px 0 0;font-size:.95rem;opacity:.9}
+.rvp-total b{font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-size:1.5rem;color:#F2C14E;margin:0 2px}
+.jboard{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:8px}
+.jrow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 16px}
+.jrow .jn{font-weight:600}
+.jrow .jt{font-size:.78rem;font-weight:600;color:var(--blush);margin-left:6px}
+.jrow .ja{text-align:right;font-weight:700;font-size:1.2rem;line-height:1}
+.jrow .ja small{display:block;font-weight:500;font-size:.75rem;color:var(--muted);margin-top:3px}
+.week button:disabled{opacity:.4;cursor:default}
+.editlist{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px}
+.editrow{display:flex;gap:8px;align-items:stretch}
+.editrow input{flex:1;font-family:"Bodoni Moda",Didot,Georgia,serif;font-size:1.1rem;font-weight:600}
+.remove.armed{background:var(--blush);color:#fff;border-color:var(--blush)}
+.remove{min-height:46px}
+.sndrow{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.sndrow>.mini{flex:none;width:44px;height:44px;font-size:1.4rem}
+.sndmain{flex:1;min-width:0}
+.sndname{margin:0;font-family:"Bodoni Moda",Didot,Georgia,serif;font-style:italic;font-weight:700;font-size:1.2rem;line-height:1.25;overflow-wrap:anywhere}
+.sndsub{margin:2px 0 10px;color:var(--muted);font-size:.85rem}
+.sndrow .row{display:flex;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <h1 class="brand">Paddles <span>Up</span></h1>
+    <div class="week" role="group" aria-label="Week, shared with everyone">
+      <button id="weekDown" aria-label="Previous week">−</button>
+      <span id="weekNum"></span>
+      <button id="weekUp" aria-label="Next week">+</button>
+    </div>
+    <button class="iconbtn" id="muteBtn" aria-label="Sound on" aria-pressed="false">🔊</button>
+  </div>
+</header>
+<main id="view"></main>
+<nav aria-label="Sections">
+  <div class="nwrap">
+    <button data-tab="score">Score</button>
+    <button data-tab="board">Leaderboard</button>
+    <button data-tab="sounds">Sounds</button>
+  </div>
+</nav>
+<div id="sheet" hidden></div>
+<div id="reveal" hidden></div>
+<input type="file" id="fileIn" accept="audio/*,video/*,.m4a,.mp3,.wav,.aac,.caf" hidden>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  "use strict";
+  var LKEY = "paddlesup:v2", CLIPKEY = "paddlesup:v1:snd:";
+  var DANCES = ["Cha-cha-cha","Waltz","Quickstep","Tango","Foxtrot","Rumba","Jive","Samba","Paso Doble","Viennese Waltz","American Smooth","Argentine Tango","Charleston","Salsa","Couple’s Choice","Showdance"];
+  var TIERS = [
+    {id:"top",  label:"Scores of 9 or 10", test:function(s){return s>=9;},       line:"A-MAZ-ING!",
+     speech:[{t:"Ahh",p:1.2,r:.8},{t:"MAZZ",p:1.7,r:.55},{t:"ING!",p:1.9,r:.65}]},
+    {id:"eight",label:"Scores of 8",       test:function(s){return s===8;},      line:"Fab-u-lous!",
+     speech:[{t:"Fab",p:1.5,r:.7},{t:"you",p:1.8,r:.7},{t:"lous!",p:1.3,r:.6}]},
+    {id:"seven",label:"Scores of 7",       test:function(s){return s===7;},      line:"Seh-VENNN!",
+     speech:[{t:"Seh",p:1.6,r:.45},{t:"VENNNN!",p:.55,r:.4}]},
+    {id:"mid",  label:"Scores of 5 or 6",  test:function(s){return s>=5&&s<=6;}, line:"Hmm. Fine, darling.",
+     speech:[{t:"Hmmm.",p:.9,r:.6},{t:"It was fine, darling.",p:1.1,r:.85}]},
+    {id:"low",  label:"Scores of 3 or 4",  test:function(s){return s>=3&&s<=4;}, line:"Dis-as-ter!",
+     speech:[{t:"Dis",p:1.4,r:.6},{t:"ass",p:1.1,r:.6},{t:"ter!",p:.6,r:.5}]},
+    {id:"dire", label:"Scores of 1 or 2",  test:function(s){return s<=2;},       line:"Dull. Dull. Dull.",
+     speech:[{t:"Dull.",p:.8,r:.6},{t:"Dull.",p:.65,r:.55},{t:"Dull.",p:.4,r:.45}]}
+  ];
+
+  /* ---------- State ---------- */
+  var DB = null;
+  var st = {mode:"loading", uid:null, conn:false};             // loading | live | readonly | local
+  var remote = {couples:[], week:1, mine:null, others:{}};
+  var localData = {mine:{panel:[],scores:[],ts:0}, couples:[], week:1};
+  var prefs = {muted:false};
+  var tab = "score", editing = false, sheet = null, lbMode = "week", rv = null, armed = null;
+  var revealTimer = null, sayTimer = null, recording = null;
+  var seen = {}, firstJudges = true, writing = false, writeAgain = false;
+
+  function $(s){ return document.querySelector(s); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function uid(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  function tierFor(n){ for(var i=0;i<TIERS.length;i++){ if(TIERS[i].test(n)) return TIERS[i]; } return TIERS[3]; }
+  function initials(n){ var p = String(n).trim().split(/\s+/); return ((p[0]||"?")[0] + (p[1]?p[1][0]:"")).toUpperCase(); }
+  function fmt(n){ return (Math.round(n*10)/10).toString(); }
+
+  function live(){ return st.mode==="live" || st.mode==="readonly"; }
+  function canScore(){ return st.mode!=="readonly"; }
+  function C(){ return live() ? remote.couples : localData.couples; }
+  function W(){ return live() ? remote.week : localData.week; }
+  function M(){ return (live() ? remote.mine : localData.mine) || {panel:[],scores:[],ts:0}; }
+  function myKey(){ return live() ? st.uid : "local"; }
+
+  function loadLocal(){
+    var d = null;
+    try{ d = JSON.parse(localStorage.getItem(LKEY) || "null"); }catch(e){}
+    if(!d){
+      d = {prefs:{muted:false}, local:{mine:{panel:[],scores:[],ts:0}, couples:[], week:1}};
+      try{
+        var o = JSON.parse(localStorage.getItem("paddlesup:v1") || "null");
+        if(o && o.scores){
+          d.prefs.muted = !!o.muted;
+          if(o.judge) d.local.mine.panel = [{pid:"p1", name:String(o.judge)}];
+          d.local.couples = (o.couples||[]).map(function(c,i){ return {id:c.id, name:c.name, ts:i}; });
+          d.local.week = o.week || 1;
+          d.local.mine.scores = o.judge ? (o.scores||[]).map(function(s){ return {id:s.id,pid:"p1",coupleId:s.coupleId,coupleName:s.name,dance:s.dance,week:s.week,score:s.score,ts:s.ts}; }) : [];
+        }
+      }catch(e){}
+    }
+    prefs = d.prefs || {muted:false};
+    localData = cleanLocal(d.local);
+  }
+  function cleanLocal(l){
+    l = l || {};
+    return {mine:cleanJudge(l.mine||{}), couples:Array.isArray(l.couples)?l.couples.filter(function(c){return c && c.id;}):[], week:+l.week>=1?Math.floor(+l.week):1};
+  }
+  function saveLocal(){
+    try{ localStorage.setItem(LKEY, JSON.stringify({prefs:prefs, local:localData})); }
+    catch(e){ toast("Couldn’t save on this phone – storage is blocked or full"); }
+  }
+
+  /* Data written by other people is untrusted: keep only well-formed fields */
+  function cleanJudge(v){
+    v = v || {};
+    var panel = (Array.isArray(v.panel)?v.panel:[]).filter(function(p){ return p && typeof p.pid==="string"; })
+      .slice(0,12).map(function(p){ return {pid:p.pid.slice(0,40), name:String(p.name||"Judge").slice(0,24)}; });
+    var scores = (Array.isArray(v.scores)?v.scores:[]).filter(function(s){
+      return s && typeof s.id==="string" && typeof s.pid==="string" && typeof s.coupleId==="string" &&
+        typeof s.score==="number" && s.score>=1 && s.score<=10 && Math.floor(s.score)===s.score && typeof s.week==="number";
+    }).map(function(s){ return {id:s.id, pid:s.pid, coupleId:s.coupleId, coupleName:String(s.coupleName||"").slice(0,60), dance:String(s.dance||"Dance").slice(0,40), week:s.week, score:s.score, ts:+s.ts||0}; });
+    return {panel:panel, scores:scores, ts:+v.ts||0};
+  }
+
+  var toastT;
+  function toast(msg){
+    var t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove("show"); }, 2800);
+  }
+
+  /* ---------- Shared party (db) ---------- */
+  /* ---------- Server connection ----------
+     A tiny realtime document store over WebSocket. It mirrors the calls the
+     app makes: collection(name).onSnapshot, doc(path).onSnapshot/set/delete. */
+  function deviceId(){
+    var k = "paddlesup:device", id = null;
+    try{ id = localStorage.getItem(k); }catch(e){}
+    if(!id || !/^[A-Za-z0-9_\-]{6,80}$/.test(id)){ id = "d"+uid()+uid(); try{ localStorage.setItem(k, id); }catch(e){} }
+    return id;
+  }
+  function serverDb(device){
+    var state = {}, listeners = [], ws = null, ready = false, seq = 0, pending = {}, retry = 0, timer = null, statusCbs = [];
+    function snapDoc(p){
+      var d = state[p];
+      return {id:p.split("/")[1], exists:d!==undefined, data:function(){ return d; }, metadata:{fromCache:false, hasPendingWrites:false}};
+    }
+    function snapCol(col){
+      var ds = Object.keys(state).filter(function(p){ return p.split("/")[0]===col; }).map(snapDoc);
+      return {docs:ds, size:ds.length, empty:!ds.length, metadata:{fromCache:false, hasPendingWrites:false}};
+    }
+    function notify(p){
+      if(!ready) return;
+      listeners.slice().forEach(function(l){
+        try{
+          if(l.kind==="col" && (p===null || p.split("/")[0]===l.path)) l.cb(snapCol(l.path));
+          else if(l.kind==="doc" && (p===null || p===l.path)) l.cb(snapDoc(l.path));
+        }catch(e){ console.error(e); }
+      });
+    }
+    function setOpen(v){ statusCbs.forEach(function(f){ f(v); }); }
+    function connectWs(){
+      clearTimeout(timer);
+      if(ws && (ws.readyState===0 || ws.readyState===1)) return;
+      try{ ws = new WebSocket((location.protocol==="https:" ? "wss:" : "ws:")+"//"+location.host+"/ws"); }
+      catch(e){ schedule(); return; }
+      ws.onopen = function(){ retry = 0; ws.send(JSON.stringify({type:"hello", device:device})); };
+      ws.onmessage = function(ev){
+        var m; try{ m = JSON.parse(ev.data); }catch(e){ return; }
+        if(m.type==="state"){ state = m.docs || {}; ready = true; setOpen(true); notify(null); }
+        else if(m.type==="change"){ if(m.data==null) delete state[m.path]; else state[m.path] = m.data; notify(m.path); }
+        else if(m.type==="ack"){ var a = pending[m.id]; if(a){ delete pending[m.id]; a.res(); } }
+        else if(m.type==="error"){ var b = pending[m.id]; if(b){ delete pending[m.id]; b.rej({code:m.code||"unavailable", message:m.message||""}); } }
+      };
+      ws.onclose = function(){
+        setOpen(false);
+        Object.keys(pending).forEach(function(k){ pending[k].rej({code:"unavailable"}); delete pending[k]; });
+        schedule();
+      };
+      ws.onerror = function(){ try{ ws.close(); }catch(e){} };
+    }
+    function schedule(){ clearTimeout(timer); retry = Math.min(retry+1, 6); timer = setTimeout(connectWs, 400*Math.pow(1.8, retry)+Math.random()*400); }
+    document.addEventListener("visibilitychange", function(){ if(!document.hidden && (!ws || ws.readyState===3)){ retry = 0; connectWs(); } });
+    window.addEventListener("online", function(){ retry = 0; connectWs(); });
+    function send(msg){
+      return new Promise(function(res, rej){
+        if(!ws || ws.readyState!==1){ rej({code:"unavailable"}); return; }
+        msg.id = ++seq; pending[msg.id] = {res:res, rej:rej};
+        try{ ws.send(JSON.stringify(msg)); }catch(e){ delete pending[msg.id]; rej({code:"unavailable"}); }
+      });
+    }
+    function listen(kind, p, cb){
+      var l = {kind:kind, path:p, cb:cb}; listeners.push(l);
+      if(ready) setTimeout(function(){ if(listeners.indexOf(l)>=0) cb(kind==="col" ? snapCol(p) : snapDoc(p)); }, 0);
+      return function(){ var i = listeners.indexOf(l); if(i>=0) listeners.splice(i,1); };
+    }
+    connectWs();
+    return {
+      collection:function(name){ return {onSnapshot:function(cb){ return listen("col", name, cb); }}; },
+      doc:function(p){ return {
+        onSnapshot:function(cb){ return listen("doc", p, cb); },
+        set:function(data){ state[p] = JSON.parse(JSON.stringify(data)); notify(p); return send({type:"set", path:p, data:data}); },
+        delete:function(){ delete state[p]; notify(p); return send({type:"delete", path:p}); }
+      }; },
+      onStatus:function(f){ statusCbs.push(f); }
+    };
+  }
+  function connect(){
+    var id = deviceId();
+    var to = setTimeout(function(){ if(st.mode==="loading") goLocal(true); }, 10000);
+    DB = serverDb(id); st.uid = id;
+    DB.onStatus(function(v){ var was = st.conn; st.conn = v; if(was!==v && live()) render(); });
+    subscribe(true, function(){ clearTimeout(to); });
+  }
+  function goLocal(slow){
+    if(st.mode!=="loading") return;
+    st.mode = "local";
+    if(slow) toast("Couldn’t reach the shared party – scoring on this phone for now");
+    render();
+  }
+  function dbErr(e){
+    if(e && e.code==="revoked"){ toast("Lost access to the shared party"); }
+  }
+  function subscribe(canWrite, ready){
+    try{
+      DB.collection("couples").onSnapshot(function(s){
+        remote.couples = s.docs.filter(function(d){ return d.exists; }).map(function(d){
+          var v = d.data() || {}; return {id:d.id, name:String(v.name||"Couple").slice(0,60), ts:+v.ts||0};
+        }).sort(function(a,b){ return a.ts-b.ts; });
+        if(live()){ render(); if(rv) renderRevealPanel(); }
+      }, dbErr);
+      DB.collection("sounds").onSnapshot(function(s){
+        var m = {};
+        s.docs.forEach(function(d){
+          if(!d.exists) return;
+          var n = +String(d.id).replace(/^s/,""), v = d.data() || {};
+          if(n>=1 && n<=10 && validSound(v)) m[n] = {data:v.data, name:String(v.name||"Custom sound").slice(0,40), ts:+v.ts||0};
+        });
+        remoteSnd = m;
+        if(live() && tab==="sounds") render();
+      }, dbErr);
+      DB.doc("party/state").onSnapshot(function(s){
+        var w = s.exists ? +((s.data()||{}).week) : 1;
+        remote.week = w>=1 && w<200 ? Math.floor(w) : 1;
+        if(live()) render();
+      }, dbErr);
+      DB.collection("judges").onSnapshot(function(s){
+        var others = {}, mineDoc = null;
+        s.docs.forEach(function(d){
+          if(!d.exists) return;
+          var v = cleanJudge(d.data());
+          if(d.id===st.uid) mineDoc = v; else others[d.id] = v;
+        });
+        remote.others = others;
+        var needPush = false;
+        if(!remote.mine){
+          if(mineDoc) remote.mine = mineDoc;
+          else {
+            remote.mine = {panel:localData.mine.panel.map(function(p){ return {pid:p.pid, name:p.name}; }), scores:[], ts:0};
+            needPush = canWrite && remote.mine.panel.length>0;
+          }
+        } else if(mineDoc && mineDoc.ts>remote.mine.ts && !writing){
+          remote.mine = mineDoc;   // changed from this person’s other device
+        } else if(st.mode==="live" && !writing && remote.mine.panel.length && (!mineDoc || mineDoc.ts<remote.mine.ts)){
+          needPush = true;          // back online with paddles the server hasn’t got yet
+        }
+        var fresh = [];
+        Object.keys(others).forEach(function(u){
+          others[u].scores.forEach(function(x){
+            var k = u+":"+x.id;
+            if(!seen[k]){ seen[k] = 1; if(!firstJudges) fresh.push({u:u, x:x}); }
+          });
+        });
+        if(firstJudges){
+          firstJudges = false;
+          st.mode = canWrite ? "live" : "readonly";
+          editing = false; armed = null;
+          ready();
+          warmTracks();
+        }
+        if(needPush) setTimeout(pushMine, 0);
+        if(fresh.length){
+          var f = fresh[fresh.length-1];
+          toast(judgeName(f.u+":"+f.x.pid)+" gave "+coupleName(f.x)+" a "+f.x.score);
+        }
+        render();
+        if(rv) renderRevealPanel();
+      }, dbErr);
+    }catch(e){ goLocal(false); }
+  }
+  function pushMine(){
+    var m = M(); m.ts = Date.now();
+    if(!live()){ saveLocal(); return; }
+    if(st.mode!=="live" || !DB) return;
+    if(writing){ writeAgain = true; return; }
+    writing = true;
+    DB.doc("judges/"+st.uid).set(clone(m)).then(done, function(e){
+      if(e && e.code==="quota_exceeded") toast("The party’s storage is full – scores can’t be saved");
+      else if(e && e.code==="rejected") toast("The server didn’t accept that change");
+      else toast("Saved on this phone – it’ll sync when you’re back online");
+      done();
+    });
+    function done(){ writing = false; if(writeAgain){ writeAgain = false; pushMine(); } }
+  }
+  function writeErr(e){
+    if(e && e.code==="rejected") toast("The server didn’t accept that change");
+    else if(e && e.code==="quota_exceeded") toast("The party’s storage is full");
+    else toast("Couldn’t save that – check your connection");
+  }
+
+  function addCouple(name){
+    var c = {id:uid(), name:name, ts:Date.now()};
+    if(live()){ remote.couples.push(c); DB.doc("couples/"+c.id).set({name:name, ts:c.ts}).catch(writeErr); }
+    else { localData.couples.push(c); saveLocal(); }
+    render();
+  }
+  function removeCouple(id){
+    if(live()){ remote.couples = remote.couples.filter(function(c){ return c.id!==id; }); DB.doc("couples/"+id).delete().catch(writeErr); }
+    else { localData.couples = localData.couples.filter(function(c){ return c.id!==id; }); saveLocal(); }
+    render();
+  }
+  function renameCouple(id, name){
+    name = name.trim().slice(0,40); if(!name) { render(); return; }
+    var list = C(), c = list.find(function(x){ return x.id===id; }); if(!c || c.name===name) return;
+    c.name = name;
+    if(live()) DB.doc("couples/"+id).set({name:name, ts:c.ts}).catch(writeErr);
+    else saveLocal();
+    toast("Renamed to "+name);
+  }
+  function renameJudge(pid, name){
+    name = name.trim().slice(0,24); if(!name){ render(); return; }
+    var p = M().panel.find(function(x){ return x.pid===pid; }); if(!p || p.name===name) return;
+    p.name = name; pushMine(); toast("Renamed to "+name);
+  }
+  function setWeek(n){
+    if(n<1 || !canScore()) return;
+    if(live()){ remote.week = n; DB.doc("party/state").set({week:n}).catch(writeErr); }
+    else { localData.week = n; saveLocal(); }
+    armed = null; render();
+  }
+  function addJudge(name){
+    var m = M(); if(m.panel.length>=12){ toast("That’s a big panel – 12 judges per phone is the limit"); return; }
+    m.panel.push({pid:uid(), name:name}); pushMine(); render();
+  }
+  function removeJudge(pid){
+    var m = M();
+    m.panel = m.panel.filter(function(p){ return p.pid!==pid; });
+    m.scores = m.scores.filter(function(s){ return s.pid!==pid; });
+    pushMine(); render();
+  }
+
+  /* ---------- Derived views ---------- */
+  function docs(){
+    var out = [{u:myKey(), d:M(), me:true}];
+    if(live()) Object.keys(remote.others).forEach(function(u){ out.push({u:u, d:remote.others[u], me:false}); });
+    return out;
+  }
+  function allJudges(){
+    var o = [];
+    docs().forEach(function(x){ x.d.panel.forEach(function(p){ o.push({key:x.u+":"+p.pid, pid:p.pid, name:p.name, me:x.me}); }); });
+    return o;
+  }
+  function allScores(){
+    var o = [];
+    docs().forEach(function(x){
+      var pids = {}; x.d.panel.forEach(function(p){ pids[p.pid] = 1; });
+      x.d.scores.forEach(function(s){ if(pids[s.pid]) o.push({key:x.u+":"+s.pid, id:s.id, pid:s.pid, coupleId:s.coupleId, coupleName:s.coupleName, dance:s.dance, week:s.week, score:s.score, ts:s.ts, me:x.me}); });
+    });
+    return o;
+  }
+  function judgeName(key){ var j = allJudges().find(function(j){ return j.key===key; }); return j ? j.name : "A judge"; }
+  function coupleName(s){ var c = C().find(function(c){ return c.id===s.coupleId; }); return c ? c.name : (s.coupleName || "a couple"); }
+  function currentDance(cid, wk){
+    var ss = allScores().filter(function(s){ return s.coupleId===cid && s.week===wk; }).sort(function(a,b){ return b.ts-a.ts; });
+    return ss[0] ? ss[0].dance : null;
+  }
+  function panelFor(cid, wk, dance){
+    var sc = allScores().filter(function(s){ return s.coupleId===cid && s.week===wk && s.dance===dance; });
+    return allJudges().map(function(j){
+      var m = sc.filter(function(s){ return s.key===j.key; }).sort(function(a,b){ return b.ts-a.ts; })[0];
+      return {j:j, s:m ? m.score : null};
+    });
+  }
+  function firstUnscored(cid, wk, dance){
+    if(!dance) return null;
+    var me = myKey(), all = allScores();
+    var p = M().panel.find(function(p){ return !all.some(function(s){ return s.key===me+":"+p.pid && s.coupleId===cid && s.week===wk && s.dance===dance; }); });
+    return p ? p.pid : null;
+  }
+
+  /* ---------- Audio ----------
+     Everything plays through one <audio> element, started inside the tap
+     that gives the score. Phones (and the Claude app) only allow sound that
+     starts from a tap, so the drum roll and the sting or custom clip are
+     mixed into a single WAV ahead of time. */
+  var SR = 22050, ROLL = 1.5, CUSTOM_SR = 16000, CUSTOM_MAX = 4.5;
+  var player = null, audioUnlocked = false, trackCache = {}, SILENT = null;
+  var speechOK = "speechSynthesis" in window, voice = null;
+  try{ if(navigator.audioSession) navigator.audioSession.type = "playback"; }catch(e){}
+
+  function getPlayer(){
+    if(!player){ player = new Audio(); player.preload = "auto"; player.setAttribute("playsinline",""); }
+    return player;
+  }
+  function unlock(){
+    if(audioUnlocked) return;
+    var p = getPlayer();
+    if(!p.paused) return;
+    audioUnlocked = true;
+    if(!SILENT) SILENT = URL.createObjectURL(wavBlob(new Float32Array(SR/20), SR));
+    p.src = SILENT;
+    var pr = p.play();
+    if(pr && pr.catch) pr.catch(function(e){ if(e && e.name==="NotAllowedError") audioUnlocked = false; });
+    if(speechOK){ try{ var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); }catch(e){} }
+  }
+
+  function wavBytes(f, rate){
+    var n = f.length, buf = new ArrayBuffer(44+n*2), v = new DataView(buf);
+    function s(o,str){ for(var i=0;i<str.length;i++) v.setUint8(o+i, str.charCodeAt(i)); }
+    s(0,"RIFF"); v.setUint32(4,36+n*2,true); s(8,"WAVE"); s(12,"fmt ");
+    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+    v.setUint32(24,rate,true); v.setUint32(28,rate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+    s(36,"data"); v.setUint32(40,n*2,true);
+    for(var i=0;i<n;i++){ var x = Math.max(-1, Math.min(1, f[i])); v.setInt16(44+i*2, x<0 ? x*32768 : x*32767, true); }
+    return buf;
+  }
+  function wavBlob(f, rate){ return new Blob([wavBytes(f, rate)], {type:"audio/wav"}); }
+  function bytesToB64(buf){
+    var u = new Uint8Array(buf), s = "", CH = 0x8000;
+    for(var i=0;i<u.length;i+=CH) s += String.fromCharCode.apply(null, u.subarray(i, i+CH));
+    return btoa(s);
+  }
+  function parseWav(dataUrl){
+    try{
+      var b = atob(dataUrl.split(",")[1]), u = new Uint8Array(b.length);
+      for(var i=0;i<b.length;i++) u[i] = b.charCodeAt(i);
+      var v = new DataView(u.buffer), rate = 16000, ch = 1, bits = 16, off = 12, dOff = -1, dLen = 0;
+      while(off+8<=u.length){
+        var id = String.fromCharCode(u[off],u[off+1],u[off+2],u[off+3]), len = v.getUint32(off+4,true);
+        if(id==="fmt "){ ch = v.getUint16(off+10,true); rate = v.getUint32(off+12,true); bits = v.getUint16(off+22,true); }
+        else if(id==="data"){ dOff = off+8; dLen = Math.min(len, u.length-dOff); break; }
+        off += 8+len+(len%2);
+      }
+      if(dOff<0 || bits!==16 || ch<1 || rate<4000 || rate>96000) return null;
+      var n = Math.floor(dLen/2/ch), out = new Float32Array(n);
+      for(var k=0;k<n;k++) out[k] = v.getInt16(dOff+k*2*ch, true)/32768;
+      return {data:out, rate:rate};
+    }catch(e){ return null; }
+  }
+  function resample(src, from, to){
+    if(from===to) return src;
+    var n = Math.floor(src.length*to/from), out = new Float32Array(n), r = from/to;
+    for(var i=0;i<n;i++){ var x = i*r, i0 = Math.floor(x), fr = x-i0, a = src[i0]||0, b = src[i0+1]||0; out[i] = a+(b-a)*fr; }
+    return out;
+  }
+
+  /* Built-in sounds, synthesised in plain JavaScript */
+  function rng(seed){ return function(){ seed = (seed*1664525+1013904223)>>>0; return seed/4294967296*2-1; }; }
+  function drumInto(buf){
+    var R = rng(7), prev = 0, i, t;
+    for(t=0;t<ROLL;t+=.045){
+      var st = Math.floor(t*SR), len = Math.floor(.06*SR), amp = .06+.32*(t/ROLL);
+      for(i=0;i<len;i++){ var nz = R(), hp = nz-prev; prev = nz; buf[st+i] += hp*.55*amp*Math.exp(-i/(len*.3)); }
+    }
+    var c = Math.floor(ROLL*SR), cl = Math.floor(1.3*SR); prev = 0;
+    for(i=0;i<cl && c+i<buf.length;i++){ var nz2 = R(), hp2 = nz2-prev; prev = nz2; buf[c+i] += hp2*.32*Math.exp(-i/(SR*.35)); }
+    var ph = 0;
+    for(i=0;i<Math.floor(.55*SR) && c+i<buf.length;i++){
+      var tt = i/SR, f = 140*Math.pow(45/140, Math.min(tt/.4,1));
+      ph += 2*Math.PI*f/SR; buf[c+i] += Math.sin(ph)*.7*Math.exp(-tt/.12);
+    }
+  }
+  function wave(type, p){ p = p%1; if(type==="square") return p<.5 ? 1 : -1; if(type==="triangle") return 1-4*Math.abs(p-.5); return 2*p-1; }
+  function toneInto(buf, t0, freq, dur, type, vol, glide){
+    var st = Math.floor(t0*SR), n = Math.floor(dur*SR), p1 = 0, p2 = 0, lp = 0;
+    for(var i=0;i<n && st+i<buf.length;i++){
+      var tt = i/SR, f = glide ? freq+(glide-freq)*(tt/dur) : freq;
+      p1 += f/SR; p2 += f*1.006/SR;
+      var x = (wave(type,p1)+wave(type,p2))/2; lp += .3*(x-lp);
+      var env = tt<.03 ? tt/.03 : (tt>dur*.7 ? Math.max(0, 1-(tt-dur*.7)/(dur*.3)) : 1);
+      buf[st+i] += lp*vol*env*1.6;
+    }
+  }
+  var STINGS = {
+    top:function(b,s){ var t = s; [[523,.12],[659,.12],[784,.12],[1047,.75]].forEach(function(n){ toneInto(b,t,n[0],n[1],"saw",.22); toneInto(b,t,n[0]/2,n[1],"square",.06); t += n[1]; }); return t; },
+    eight:function(b,s){ toneInto(b,s,659,.15,"triangle",.3); toneInto(b,s+.15,880,.45,"triangle",.3); return s+.6; },
+    seven:function(b,s){ toneInto(b,s,196,.25,"saw",.25); toneInto(b,s+.3,185,.7,"saw",.25); return s+1; },
+    mid:function(b,s){ toneInto(b,s,440,.2,"triangle",.25); toneInto(b,s+.22,415,.35,"triangle",.25); return s+.6; },
+    low:function(b,s){ toneInto(b,s,620,.7,"square",.12,140); return s+.7; },
+    dire:function(b,s){ [392,370,349].forEach(function(f,i){ toneInto(b,s+i*.45,f,.42,"triangle",.3); }); toneInto(b,s+1.35,330,1.1,"triangle",.3,290); return s+2.45; }
+  };
+  function buildTrack(n){
+    var cu = customFor(n), clip = null;
+    if(cu){ var pw = parseWav(cu.data); if(pw) clip = resample(pw.data, pw.rate, SR); }
+    var s0 = ROLL+.05, len = Math.ceil((s0+(clip ? clip.length/SR : 2.6)+.3)*SR), b = new Float32Array(len), end, i;
+    drumInto(b);
+    if(clip){ var st = Math.floor(s0*SR); for(i=0;i<clip.length && st+i<len;i++) b[st+i] += clip[i]*.95; end = s0+clip.length/SR; }
+    else end = STINGS[tierFor(n).id](b, s0);
+    var outLen = Math.min(len, Math.ceil((Math.max(end, ROLL+1.3)+.1)*SR)), o = new Float32Array(outLen);
+    for(i=0;i<outLen;i++) o[i] = Math.tanh(b[i]*1.1);
+    return {url:URL.createObjectURL(wavBlob(o, SR)), custom:!!clip};
+  }
+  function track(n){
+    var key = customKey(n), t = trackCache[n];
+    if(t && t.key===key) return t;
+    if(t){ var old = t.url; setTimeout(function(){ URL.revokeObjectURL(old); }, 15000); }
+    t = buildTrack(n); t.key = key; trackCache[n] = t;
+    return t;
+  }
+  function warmTracks(){
+    var list = [10,9,8,7,6,5,4,3,2,1];
+    (function next(){ var n = list.shift(); if(n==null) return; try{ track(n); }catch(e){} setTimeout(next, 30); })();
+  }
+
+  function pickVoice(){
+    if(voice || !speechOK) return voice;
+    var vs = speechSynthesis.getVoices() || [];
+    voice = vs.find(function(v){ return /en-GB/i.test(v.lang) && /Daniel|Arthur|Male|Oliver|George/i.test(v.name); })
+         || vs.find(function(v){ return /en-GB/i.test(v.lang); })
+         || vs.find(function(v){ return /^en/i.test(v.lang); }) || null;
+    return voice;
+  }
+  if(speechOK){ try{ speechSynthesis.onvoiceschanged = function(){ voice = null; pickVoice(); }; }catch(e){} }
+  function say(parts){
+    if(!speechOK) return;
+    try{
+      speechSynthesis.cancel();
+      var v = pickVoice();
+      parts.forEach(function(p){
+        var u = new SpeechSynthesisUtterance(p.t);
+        if(v) u.voice = v; u.lang = v ? v.lang : "en-GB";
+        u.pitch = p.p; u.rate = p.r; u.volume = 1;
+        speechSynthesis.speak(u);
+      });
+    }catch(e){}
+  }
+  function stopSound(){
+    if(player){ player.onended = null; try{ player.pause(); }catch(e){} }
+    if(speechOK){ try{ speechSynthesis.cancel(); }catch(e){} }
+  }
+  /* Call straight from a tap */
+  function playScore(n){
+    if(prefs.muted) return;
+    stopSound();
+    var t = track(n), p = getPlayer(), tier = tierFor(n);
+    p.src = t.url;
+    try{ p.currentTime = 0; }catch(e){}
+    var pr = p.play();
+    if(pr && pr.catch) pr.catch(function(e){ if(e && e.name==="NotAllowedError") toast("Sound was blocked – tap the screen once, then try again"); });
+    if(!t.custom) p.onended = function(){ p.onended = null; say(tier.speech); };
+    audioUnlocked = true;
+  }
+
+  /* ---------- Rendering ---------- */
+  function render(){
+    var a = document.activeElement, keep = null;
+    if(a && a.tagName==="INPUT" && a.id && $("#view").contains(a)) keep = {id:a.id, v:a.value, s:a.selectionStart, e:a.selectionEnd};
+    $("#weekNum").textContent = "Week " + W();
+    $("#weekDown").disabled = !canScore() || W()<=1;
+    $("#weekUp").disabled = !canScore();
+    var mb = $("#muteBtn"); mb.textContent = prefs.muted ? "🔇" : "🔊";
+    mb.setAttribute("aria-pressed", String(prefs.muted)); mb.setAttribute("aria-label", prefs.muted ? "Sound off" : "Sound on");
+    document.querySelectorAll("nav [data-tab]").forEach(function(b){ if(b.dataset.tab===tab) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+    if(tab==="score") renderScore(); else if(tab==="board") renderBoard(); else renderSounds();
+    if(keep){ var n = document.getElementById(keep.id); if(n){ n.value = keep.v; n.focus(); try{ n.setSelectionRange(keep.s, keep.e); }catch(e){} } }
+  }
+
+  function statusHtml(){
+    var n = allJudges().length;
+    if(st.mode==="loading") return '<p class="status">Joining the party…</p>';
+    if(live() && !st.conn) return '<p class="status warn">Reconnecting – your paddles are kept and will sync when the connection’s back.</p>';
+    if(live()) return '<p class="status live"><span class="dot" aria-hidden="true"></span>Live with '+n+' judge'+(n===1?'':'s')+' – everyone sees every paddle</p>';
+    return '<p class="status warn">Can’t reach the party right now, so scores are being kept on this phone. You can also add everyone as judges here and pass the phone round.</p>';
+  }
+
+  function renderScore(){
+    var v = $("#view"), wk = W(), mine = M(), html = statusHtml();
+    if(canScore() && st.mode!=="loading" && mine.panel.length===0){
+      v.innerHTML = html + '<section class="welcome"><h2>Who’s judging on this phone?</h2><p>Add your name. You can add more judges later if people are sharing a phone.</p>'+
+        '<form id="nameForm"><input id="nameIn" maxlength="24" placeholder="Your name" autocomplete="given-name" aria-label="Your name"><button class="primary">Start judging</button></form></section>';
+      return;
+    }
+    if(canScore() && mine.panel.length){
+      html += '<section class="phonepanel"><div class="sectionhead"><h2 class="h3">Judging on this phone</h2><button class="link" data-edit>'+(editing?'Done':'Edit')+'</button></div>';
+      if(editing){
+        html += '<ul class="editlist">'+mine.panel.map(function(p){
+          var ak = "j:"+p.pid, isArmed = armed===ak;
+          return '<li class="editrow"><input id="rj-'+esc(p.pid)+'" data-rename-judge="'+esc(p.pid)+'" maxlength="24" value="'+esc(p.name)+'" aria-label="Judge name"><button class="remove'+(isArmed?' armed':'')+'" data-rmjudge="'+esc(p.pid)+'">'+(isArmed?'Sure?':'Remove')+'</button></li>';
+        }).join("")+'</ul>';
+      } else {
+        html += '<div class="jchips">'+mine.panel.map(function(p){ return '<span class="jchip">'+esc(p.name)+'</span>'; }).join("")+'</div>';
+      }
+      html += '<form id="judgeForm" class="add slim"><input id="judgeIn" maxlength="24" placeholder="Add another judge on this phone" aria-label="Judge name"><button class="primary">Add judge</button></form></section>';
+    }
+    var couples = C(), judges = allJudges(), all = allScores();
+    var rows = couples.map(function(c){
+      var d = currentDance(c.id, wk), sub, total = "", minis = "";
+      if(d){
+        var p = panelFor(c.id, wk, d), got = p.filter(function(x){ return x.s!=null; });
+        total = '<span class="ctotal" aria-label="Panel total '+got.reduce(function(a,x){return a+x.s;},0)+'">'+got.reduce(function(a,x){return a+x.s;},0)+'</span>';
+        sub = esc(d)+' – '+got.length+' of '+p.length+' judges';
+        minis = '<span class="minis">'+p.map(function(x){
+          return x.s==null ? '<span class="mini empty" title="'+esc(x.j.name)+' hasn’t scored" aria-label="'+esc(x.j.name)+' hasn’t scored">'+esc(initials(x.j.name))+'</span>'
+                           : '<span class="mini" title="'+esc(x.j.name)+': '+x.s+'" aria-label="'+esc(x.j.name)+' gave '+x.s+'">'+x.s+'</span>';
+        }).join("")+'</span>';
+      } else sub = canScore() ? 'Tap to score when they’ve danced' : 'Not scored yet';
+      if(editing){
+        var ck = "c:"+c.id, cArmed = armed===ck;
+        return '<li class="editrow"><input id="rc-'+esc(c.id)+'" data-rename-couple="'+esc(c.id)+'" maxlength="40" value="'+esc(c.name)+'" aria-label="Couple name"><button class="remove'+(cArmed?' armed':'')+'" data-remove="'+esc(c.id)+'">'+(cArmed?'Sure?':'Remove')+'</button></li>';
+      }
+      return '<li class="couple"><button class="couple-btn" data-couple="'+esc(c.id)+'"'+(editing||!canScore()?' disabled':'')+'>'+
+        '<span class="ctop"><span><span class="cname">'+esc(c.name)+'</span><span class="csub">'+sub+'</span></span>'+total+'</span>'+minis+'</button>'+
+'</li>';
+    }).join("");
+    html += '<div class="sectionhead"><h2>Week '+wk+' couples</h2>'+(canScore() && couples.length ? '<button class="link" data-edit>'+(editing?'Done':'Edit')+'</button>' : '')+'</div>'+
+      (couples.length ? '<ul class="'+(editing?'editlist':'couples')+'">'+rows+'</ul>' : '<p class="empty">'+(canScore()?'Add the couples dancing tonight. Everyone at the party sees the same list.':'No couples added yet.')+'</p>');
+    if(canScore()) html += '<form id="addForm" class="add"><input id="addIn" maxlength="40" placeholder="Couple, e.g. Sam & Gio" aria-label="Couple name"><button class="primary">Add couple</button></form>';
+    v.innerHTML = html;
+  }
+
+  function pool(){ var wk = W(); var a = allScores(); return lbMode==="week" ? a.filter(function(s){ return s.week===wk; }) : a; }
+  function rankedCouples(){
+    var map = {};
+    pool().forEach(function(s){
+      if(!map[s.coupleId]) map[s.coupleId] = {id:s.coupleId, name:coupleName(s), list:[]};
+      map[s.coupleId].list.push(s);
+    });
+    var g = Object.keys(map).map(function(k){
+      var e = map[k];
+      e.total = e.list.reduce(function(a,b){ return a+b.score; },0);
+      e.avg = e.total/e.list.length;
+      var dm = {};
+      e.list.forEach(function(s){ var dk = (lbMode==="series"?"Wk "+s.week+" ":"")+s.dance; if(!dm[dk]) dm[dk] = {label:dk, total:0, n:0}; dm[dk].total += s.score; dm[dk].n++; });
+      e.dances = Object.keys(dm).map(function(k){ return dm[k]; });
+      return e;
+    });
+    g.sort(lbMode==="week" ? function(a,b){ return b.total-a.total || b.avg-a.avg; } : function(a,b){ return b.avg-a.avg || b.total-a.total; });
+    return g;
+  }
+  function rankedJudges(){
+    var p = pool();
+    return allJudges().map(function(j){
+      var ss = p.filter(function(s){ return s.key===j.key; });
+      return {j:j, n:ss.length, avg:ss.length ? ss.reduce(function(a,s){ return a+s.score; },0)/ss.length : 0};
+    }).filter(function(x){ return x.n>0; }).sort(function(a,b){ return a.avg-b.avg; });
+  }
+
+  function renderBoard(){
+    var v = $("#view"), g = rankedCouples(), js = rankedJudges(), wk = W();
+    var head = '<div class="sectionhead"><h2>The leaderboard</h2>'+(g.length?'<button class="link" id="shareBtn">Share</button>':'')+'</div>'+
+      '<div class="seg" role="group" aria-label="Leaderboard range"><button data-lb="week" aria-pressed="'+(lbMode==="week")+'">Week '+wk+'</button><button data-lb="series" aria-pressed="'+(lbMode==="series")+'">Whole series</button></div>';
+    if(!g.length){
+      v.innerHTML = head + '<p class="empty">'+(lbMode==="week" ? 'No paddles up for week '+wk+' yet. Head to Score once the first couple has danced.' : 'No scores yet. The series table builds up week by week.')+'</p>';
+      return;
+    }
+    var prev = null, rank = 0;
+    var items = g.map(function(e,i){
+      var key = lbMode==="week" ? e.total+"|"+e.avg : String(e.avg);
+      if(key!==prev) rank = i+1; prev = key;
+      var chips = e.dances.map(function(d){ return '<span class="sc">'+esc(d.label)+' <b>'+d.total+'</b> from '+d.n+'</span>'; }).join("");
+      var big = lbMode==="week" ? e.total : fmt(e.avg);
+      var sub = lbMode==="week" ? e.list.length+" paddle"+(e.list.length>1?"s":"") : "avg paddle, "+e.list.length+" in all";
+      return '<li class="entry'+(rank===1?' first':'')+'"><span class="rank">'+rank+'</span><span class="ename">'+esc(e.name)+'</span>'+
+        '<span class="etotal">'+big+'<small>'+sub+'</small></span><div class="edances">'+chips+'</div></li>';
+    }).join("");
+    var jitems = js.map(function(x,i){
+      var tag = js.length>1 ? (i===0 ? '<span class="jt">Harshest</span>' : (i===js.length-1 ? '<span class="jt">Softest</span>' : '')) : '';
+      return '<li class="jrow"><span><span class="jn">'+esc(x.j.name)+'</span>'+tag+'</span><span class="ja">'+fmt(x.avg)+'<small>avg from '+x.n+' paddle'+(x.n>1?'s':'')+'</small></span></li>';
+    }).join("");
+    v.innerHTML = head + '<ol class="board">'+items+'</ol>'+
+      '<div class="sectionhead"><h2 class="h3">The judges</h2></div><ul class="jboard">'+jitems+'</ul><div id="shareSlot"></div>';
+  }
+
+  function boardText(){
+    var g = rankedCouples(), js = rankedJudges();
+    var lines = ["Paddles Up – "+(lbMode==="week" ? "Week "+W() : "whole series")];
+    g.forEach(function(e,i){
+      lines.push((i+1)+". "+e.name+" – "+(lbMode==="week" ? e.total : fmt(e.avg)+" avg")+" ("+e.dances.map(function(d){ return d.label+" "+d.total; }).join(", ")+")");
+    });
+    if(js.length>1) lines.push("", "Harshest judge: "+js[0].j.name+" ("+fmt(js[0].avg)+" avg)", "Softest judge: "+js[js.length-1].j.name+" ("+fmt(js[js.length-1].avg)+" avg)");
+    return lines.join("\n");
+  }
+  function share(){
+    var text = boardText();
+    function showBox(){
+      var slot = $("#shareSlot"); if(!slot) return;
+      slot.innerHTML = '<textarea class="sharebox" readonly aria-label="Leaderboard text to copy">'+esc(text)+'</textarea>';
+      var ta = slot.querySelector("textarea"); ta.focus(); ta.select();
+      toast("Copy this and paste it in the group chat");
+    }
+    function copy(){
+      if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ toast("Leaderboard copied – paste it in the group chat"); }, showBox);
+      else showBox();
+    }
+    if(navigator.share) navigator.share({text:text}).catch(function(e){ if(!(e && e.name==="AbortError")) copy(); });
+    else copy();
+  }
+
+  /* ---------- Custom sounds ---------- */
+  var SKEY = "paddlesup:v2:snd:", localSnd = {}, remoteSnd = {}, pendingUpload = null, decodeCtx = null;
+  function loadLocalSounds(){
+    for(var n=1;n<=10;n++){ try{ var r = localStorage.getItem(SKEY+n); if(r){ var o = JSON.parse(r); if(validSound(o)) localSnd[n] = o; } }catch(e){} }
+  }
+  function validSound(o){ return o && typeof o.data==="string" && o.data.indexOf("data:audio/wav;base64,")===0 && o.data.length<300000; }
+  function customFor(n){ return live() ? remoteSnd[n] : localSnd[n]; }
+  function customKey(n){ var c = customFor(n); return c ? (live()?"r":"l")+(c.ts||0)+":"+c.data.length : ""; }
+  function saveSound(n, obj){
+    if(live()){
+      if(!canScore()) return;
+      remoteSnd[n] = obj; render();
+      DB.doc("sounds/s"+n).set(obj).then(function(){ toast("Saved – everyone hears this for a "+n); }, function(e){
+        delete remoteSnd[n]; render();
+        if(e && e.code==="quota_exceeded") toast("The party’s storage is full – remove a sound first");
+        else toast("Couldn’t save that sound – check your connection");
+      });
+    } else {
+      try{ localStorage.setItem(SKEY+n, JSON.stringify(obj)); localSnd[n] = obj; toast("Saved – that’s your new sound for a "+n); }
+      catch(e){ toast("That sound is too big to save on this phone"); }
+      render();
+    }
+  }
+  function removeSound(n){
+    if(live()){ delete remoteSnd[n]; DB.doc("sounds/s"+n).delete().catch(writeErr); }
+    else { try{ localStorage.removeItem(SKEY+n); }catch(e){} delete localSnd[n]; }
+    toast("Back to the built-in sound for a "+n); render();
+  }
+  function decodeAudio(ab){
+    var Ctor = window.AudioContext || window.webkitAudioContext;
+    if(!Ctor) return Promise.reject(new Error("no audio"));
+    if(!decodeCtx){ try{ decodeCtx = new Ctor(); }catch(e){ return Promise.reject(e); } }
+    return new Promise(function(res, rej){
+      try{ var p = decodeCtx.decodeAudioData(ab, res, rej); if(p && p.then) p.then(res, rej); }catch(e){ rej(e); }
+    });
+  }
+  function readBlob(blob){
+    if(blob.arrayBuffer) return blob.arrayBuffer();
+    return new Promise(function(res, rej){ var fr = new FileReader(); fr.onload = function(){ res(fr.result); }; fr.onerror = rej; fr.readAsArrayBuffer(blob); });
+  }
+  /* Any clip becomes a short mono WAV, which plays on every phone */
+  function processAudio(blob, name, n){
+    if(blob.size>25*1024*1024){ toast("That file is too big – pick something under 25 MB"); return; }
+    toast("Saving sound…");
+    readBlob(blob).then(decodeAudio).then(function(audio){
+      var len = audio.length, ch = audio.numberOfChannels, mono = new Float32Array(len), i, c;
+      for(c=0;c<ch;c++){ var d = audio.getChannelData(c); for(i=0;i<len;i++) mono[i] += d[i]/ch; }
+      var s = resample(mono, audio.sampleRate, CUSTOM_SR), start = 0;
+      for(i=0;i<s.length;i++){ if(Math.abs(s[i])>.02){ start = Math.max(0, i-Math.floor(.04*CUSTOM_SR)); break; } }
+      var end = Math.min(s.length, start+Math.floor(CUSTOM_MAX*CUSTOM_SR));
+      for(i=end-1;i>start;i--){ if(Math.abs(s[i])>.02){ end = Math.min(end, i+Math.floor(.15*CUSTOM_SR)); break; } }
+      var out = s.slice(start, end);
+      if(out.length<CUSTOM_SR*.15){ toast("That clip sounds silent – try again a bit louder"); return; }
+      var peak = 0; for(i=0;i<out.length;i++) peak = Math.max(peak, Math.abs(out[i]));
+      var g = peak>0 ? Math.min(4, .95/peak) : 1, fade = Math.floor(.04*CUSTOM_SR);
+      for(i=0;i<out.length;i++){ out[i] *= g; if(i>out.length-fade) out[i] *= (out.length-i)/fade; }
+      saveSound(n, {data:"data:audio/wav;base64,"+bytesToB64(wavBytes(out, CUSTOM_SR)), name:String(name||"Custom sound").slice(0,40), ts:Date.now()});
+    }).catch(function(){ toast("Couldn’t read that file – try an MP3, M4A or WAV"); });
+  }
+  function startRec(n){
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){ toast("Recording isn’t available here – use Upload with a voice memo instead"); return; }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      var mr, chunks = [];
+      try{ mr = new MediaRecorder(stream); }catch(e){ stream.getTracks().forEach(function(t){ t.stop(); }); toast("Recording isn’t available here – use Upload instead"); return; }
+      mr.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+      mr.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        clearInterval(recording && recording.tick);
+        recording = null; render();
+        processAudio(new Blob(chunks, {type: mr.mimeType || "audio/webm"}), "Recording", n);
+      };
+      mr.start();
+      recording = {n:n, mr:mr, left:5, timer:setTimeout(stopRec, 5000), tick:setInterval(function(){ if(recording){ recording.left--; render(); } }, 1000)};
+      render();
+    }, function(){ toast("Microphone blocked here – use Upload with a voice memo instead"); });
+  }
+  function stopRec(){
+    if(!recording) return;
+    clearTimeout(recording.timer); clearInterval(recording.tick);
+    try{ if(recording.mr.state!=="inactive") recording.mr.stop(); else { recording = null; render(); } }catch(e){ recording = null; render(); }
+  }
+
+  function renderSounds(){
+    var v = $("#view"), edit = canScore();
+    var rows = [10,9,8,7,6,5,4,3,2,1].map(function(n){
+      var cu = customFor(n), t = tierFor(n), isRec = recording && recording.n===n;
+      return '<li class="sndrow"><span class="mini">'+n+'</span><div class="sndmain">'+
+        '<p class="sndname">'+(cu ? esc(cu.name||"Custom sound") : esc(t.line))+'</p>'+
+        '<p class="sndsub">'+(cu ? (live() ? "Custom – everyone hears this" : "Custom – this phone only") : "Built-in")+'</p>'+
+        '<div class="row"><button class="small" data-play="'+n+'">Play</button>'+
+        (edit ? '<button class="small'+(isRec?' rec':'')+'" data-rec="'+n+'">'+(isRec ? 'Stop ('+Math.max(recording.left,0)+')' : 'Record')+'</button>'+
+                '<button class="small" data-upload="'+n+'">Upload</button>'+
+                (cu ? '<button class="small" data-reset="'+n+'">Remove</button>' : '') : '')+
+        '</div></div></li>';
+    }).join("");
+    v.innerHTML = '<div class="sectionhead"><h2>Paddle sounds</h2></div>'+
+      '<p class="empty">Give every score its own sound. Record one here, or upload a clip or voice memo from your phone. Clips are trimmed to 4½ seconds and play straight after the drum roll'+(live()?' for everyone at the party':'')+'.</p>'+
+      (speechOK ? '' : '<p class="status warn">This phone can’t speak the built-in catchphrases, so you’ll hear the stings and see the words. Record your own to get the voices.</p>')+
+      '<ul class="sounds">'+rows+'</ul>';
+  }
+
+  /* ---------- Sheet ---------- */
+  function openSheet(cid, pid, dance){
+    var wk = W(), d = dance || currentDance(cid, wk);
+    var p = pid || firstUnscored(cid, wk, d) || (M().panel[0] && M().panel[0].pid);
+    if(!p){ toast("Add a judge on this phone first"); return; }
+    sheet = {coupleId:cid, pid:p, dance:d};
+    renderSheet();
+  }
+  function renderSheet(){
+    var c = C().find(function(x){ return x.id===sheet.coupleId; }); if(!c){ closeSheet(); return; }
+    var mine = M(), wk = W(), me = myKey();
+    var judge = mine.panel.find(function(p){ return p.pid===sheet.pid; }) || mine.panel[0];
+    if(!judge){ closeSheet(); return; }
+    sheet.pid = judge.pid;
+    var existing = sheet.dance ? allScores().filter(function(s){ return s.key===me+":"+judge.pid && s.coupleId===c.id && s.week===wk && s.dance===sheet.dance; })[0] : null;
+    var who = mine.panel.length>1 ? '<p class="label">Who’s scoring?</p><div class="who">'+mine.panel.map(function(p){
+      var on = p.pid===judge.pid; return '<button class="chip'+(on?' on':'')+'" data-who="'+esc(p.pid)+'" aria-pressed="'+on+'">'+esc(p.name)+'</button>';
+    }).join("")+'</div>' : '';
+    var el = $("#sheet");
+    el.innerHTML = '<div class="backdrop" data-close></div><div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab"></div>'+
+      '<h3 id="sheetTitle">'+esc(c.name)+'</h3><p class="hint">'+(mine.panel.length>1?'Pick the judge and the dance, then hold up the paddle.':esc(judge.name)+', pick the dance, then hold up your paddle.')+'</p>'+
+      who+'<p class="label">Dance</p><div class="dances">'+DANCES.map(function(d,i){ var on = sheet.dance===d; return '<button class="chip'+(on?' on':'')+'" data-dance="'+i+'" aria-pressed="'+on+'">'+esc(d)+'</button>'; }).join("")+'</div>'+
+      (existing ? '<p class="rescore">'+esc(judge.name)+' already gave '+existing.score+' for this – a new paddle replaces it.</p>' : '')+
+      '<div class="paddles">'+[1,2,3,4,5,6,7,8,9,10].map(function(n){ return '<button class="paddle" data-score="'+n+'" aria-label="Score '+n+'">'+n+'</button>'; }).join("")+'</div>'+
+      '<button class="link close" data-close>Cancel</button></div>';
+    el.hidden = false; document.body.classList.add("locked");
+  }
+  function closeSheet(){ sheet = null; var el = $("#sheet"); el.hidden = true; el.innerHTML = ""; if($("#reveal").hidden) document.body.classList.remove("locked"); }
+
+  function giveScore(n){
+    unlock();
+    var c = C().find(function(x){ return x.id===sheet.coupleId; }); if(!c){ closeSheet(); return; }
+    var m = M(), wk = W(), dance = sheet.dance || "Dance", pid = sheet.pid;
+    m.scores = m.scores.filter(function(s){ return !(s.pid===pid && s.coupleId===c.id && s.week===wk && s.dance===dance); });
+    var rec = {id:uid(), pid:pid, coupleId:c.id, coupleName:c.name, dance:dance, week:wk, score:n, ts:Date.now()};
+    m.scores.push(rec);
+    playScore(n);
+    pushMine();
+    closeSheet(); showReveal(rec); render();
+  }
+
+  /* ---------- Reveal ---------- */
+  function showReveal(rec){
+    var r = $("#reveal"), t = tierFor(rec.score), jn = judgeName(myKey()+":"+rec.pid);
+    rv = {rec:rec, shown:false};
+    r.innerHTML = '<canvas id="glitter" aria-hidden="true"></canvas>'+
+      '<div class="rv-top"><p class="rv-judge">'+esc(jn)+' scores</p><h2 class="rv-couple">'+esc(coupleName(rec))+'</h2><p class="rv-dance">'+esc(rec.dance)+'</p></div>'+
+      '<div class="rv-stage" id="rvStage" aria-live="polite"><span class="rv-wait">And the score is…</span></div>'+
+      '<p class="rv-line" id="rvLine"></p><div class="rv-panel" id="rvPanel"></div>'+
+      '<div class="rv-actions" id="rvActions"><button class="ghost" data-undo="'+rec.id+'">Undo score</button><button class="primary gold" id="doneBtn">Next couple</button></div>';
+    r.hidden = false; document.body.classList.add("locked");
+    var delay = prefs.muted ? 600 : ROLL*1000;
+    clearTimeout(revealTimer);
+    revealTimer = setTimeout(function(){
+      var stg = $("#rvStage"); if(!stg || !rv) return;
+      rv.shown = true;
+      stg.innerHTML = '<div class="disc'+(rec.score===10?' two':'')+'" role="img" aria-label="'+rec.score+' out of 10"><span>'+rec.score+'</span></div>';
+      $("#rvLine").textContent = t.line;
+      renderRevealPanel();
+      if(rec.score>=9) glitter();
+      if(navigator.vibrate){ try{ navigator.vibrate(rec.score>=9 ? [60,40,60,40,120] : 40); }catch(e){} }
+    }, delay);
+    $("#doneBtn").focus();
+  }
+  function renderRevealPanel(){
+    if(!rv || !rv.shown) return;
+    var r = rv.rec, p = panelFor(r.coupleId, r.week, r.dance), got = p.filter(function(x){ return x.s!=null; });
+    var tot = got.reduce(function(a,x){ return a+x.s; },0);
+    var el = $("#rvPanel"); if(!el) return;
+    el.innerHTML = p.length>1 ? '<div class="rvp-row">'+p.map(function(x){
+      return '<div class="rvp"><span class="mini'+(x.s==null?' empty':'')+'" aria-label="'+esc(x.j.name)+(x.s==null?' hasn’t scored yet':' gave '+x.s)+'">'+(x.s==null?'…':x.s)+'</span><span class="rvp-n">'+esc(x.j.name)+'</span></div>';
+    }).join("")+'</div><p class="rvp-total">Panel total <b>'+tot+'</b> from '+got.length+' of '+p.length+' judges</p>' : '';
+    var next = firstUnscored(r.coupleId, r.week, r.dance);
+    var nj = next ? M().panel.find(function(pp){ return pp.pid===next; }) : null;
+    var act = $("#rvActions");
+    if(act) act.innerHTML = '<button class="ghost" data-undo="'+r.id+'">Undo score</button>'+
+      (nj ? '<button class="primary gold" id="nextJudgeBtn" data-nextjudge="'+esc(nj.pid)+'">Next judge: '+esc(nj.name)+'</button>' : '<button class="primary gold" id="doneBtn">Next couple</button>');
+  }
+  function closeReveal(){
+    clearTimeout(revealTimer); stopSound();
+    rv = null;
+    var r = $("#reveal"); r.hidden = true; r.innerHTML = ""; document.body.classList.remove("locked");
+  }
+  function glitter(){
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var cv = $("#glitter"); if(!cv) return;
+    var Wd = innerWidth, H = innerHeight, dpr = window.devicePixelRatio || 1;
+    cv.width = Wd*dpr; cv.height = H*dpr;
+    var x = cv.getContext("2d"); x.scale(dpr,dpr);
+    var cols = ["#F2C14E","#F7D57E","#F2A0B5","#FFF6E6","#C9982E"], P = [];
+    for(var i=0;i<160;i++) P.push({x:Math.random()*Wd, y:-20-Math.random()*H*.6, vx:(Math.random()-.5)*1.6, vy:2+Math.random()*3.2, s:4+Math.random()*6, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:cols[(Math.random()*cols.length)|0]});
+    var end = performance.now()+3400;
+    (function f(now){
+      if(!document.body.contains(cv)) return;
+      x.clearRect(0,0,Wd,H);
+      P.forEach(function(p){
+        p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle = p.c;
+        x.fillRect(-p.s/2, -p.s/4, p.s, Math.max(1, p.s/2*Math.abs(Math.cos(p.r*2))));
+        x.restore();
+      });
+      if(now<end) requestAnimationFrame(f); else x.clearRect(0,0,Wd,H);
+    })(performance.now());
+  }
+
+  /* ---------- Events ---------- */
+  document.addEventListener("pointerdown", unlock);
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("button,[data-close]"); if(!b) return;
+    var d = b.dataset;
+    if(d.tab){ if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); tab = d.tab; editing = false; armed = null; if(recording) stopRec(); render(); window.scrollTo(0,0); return; }
+    if(b.id==="muteBtn"){ prefs.muted = !prefs.muted; saveLocal(); render(); if(prefs.muted) stopSound(); return; }
+    if(b.id==="weekDown"){ setWeek(W()-1); return; }
+    if(b.id==="weekUp"){ setWeek(W()+1); return; }
+    if(d.edit!==undefined){ editing = !editing; armed = null; render(); return; }
+    if(d.remove){ var ck = "c:"+d.remove; if(armed===ck){ armed = null; removeCouple(d.remove); } else { armed = ck; render(); } return; }
+    if(d.rmjudge){ var ak = "j:"+d.rmjudge; if(armed===ak){ armed = null; removeJudge(d.rmjudge); } else { armed = ak; render(); } return; }
+    if(d.couple){ openSheet(d.couple); return; }
+    if(d.close!==undefined){ closeSheet(); return; }
+    if(d.who && sheet){ sheet.pid = d.who; renderSheet(); return; }
+    if(d.dance!==undefined && sheet){ var dn = DANCES[+d.dance]; sheet.dance = sheet.dance===dn ? null : dn; renderSheet(); return; }
+    if(d.score && sheet){ giveScore(+d.score); return; }
+    if(d.undo){ var m = M(); m.scores = m.scores.filter(function(x){ return x.id!==d.undo; }); pushMine(); closeReveal(); render(); toast("Score removed"); return; }
+    if(d.nextjudge && rv){ var r = rv.rec; closeReveal(); openSheet(r.coupleId, d.nextjudge, r.dance); return; }
+    if(b.id==="doneBtn"){ closeReveal(); return; }
+    if(d.lb){ lbMode = d.lb; render(); return; }
+    if(b.id==="shareBtn"){ share(); return; }
+    if(d.play){ playScore(+d.play); return; }
+    if(d.rec){ var rn = +d.rec; if(recording && recording.n===rn) stopRec(); else if(!recording) startRec(rn); else toast("Finish the current recording first"); return; }
+    if(d.upload){ pendingUpload = +d.upload; var fi = $("#fileIn"); fi.value = ""; fi.click(); return; }
+    if(d.reset){ removeSound(+d.reset); return; }
+  });
+  document.addEventListener("submit", function(e){
+    e.preventDefault();
+    var id = e.target.id;
+    if(id==="nameForm" || id==="judgeForm"){
+      var inp = $(id==="nameForm" ? "#nameIn" : "#judgeIn"), n = inp.value.trim();
+      if(!n){ toast("Add a name to start judging"); return; }
+      inp.value = ""; addJudge(n);
+      return;
+    }
+    if(id==="addForm"){
+      var a = $("#addIn"), name = a.value.trim(); if(!name) return;
+      a.value = ""; addCouple(name);
+      var again = $("#addIn"); if(again) again.focus();
+    }
+  });
+  document.addEventListener("change", function(e){
+    var t = e.target;
+    if(t.id==="fileIn"){ var f = t.files && t.files[0]; if(f && pendingUpload){ processAudio(f, f.name.replace(/\.[^.]+$/,""), pendingUpload); } pendingUpload = null; return; }
+    if(t.dataset && t.dataset.renameCouple) renameCouple(t.dataset.renameCouple, t.value);
+    else if(t.dataset && t.dataset.renameJudge) renameJudge(t.dataset.renameJudge, t.value);
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key==="Enter" && e.target.dataset && (e.target.dataset.renameCouple || e.target.dataset.renameJudge)){ e.preventDefault(); e.target.blur(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key!=="Escape") return;
+    if(!$("#reveal").hidden) closeReveal(); else if(sheet) closeSheet();
+  });
+
+  loadLocal();
+  loadLocalSounds();
+  render();
+  warmTracks();
+  connect();
+})();
+</script>
+</body>
+</html>
